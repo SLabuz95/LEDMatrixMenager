@@ -27,8 +27,8 @@ LEDMatrixPicture::LEDMatrixPicture() : LEDMatrixPicture(static_cast<uint>(0)){
 }
 
 LEDMatrixPicture::LEDMatrixPicture(uint numbOfParams) : DataBaseObject(static_cast<DatabaseObjectType>(DB_GET_REAL_TYPE(LEDMatrixPictureDataBase, LED_MATRIX_PICTURE)), numbOfParams + NUMB_OF_LED_MATRIX_PICTURE_PARAMETERS), QGraphicsScene(){
-    setSceneRect(QRectF(QPoint(-1000,-1000), QSize(2000, 2000)));
-    sceneRectItem.setRect(sceneRect());
+    //setSceneRect(QRectF(QPoint(-1000,-1000), QSize(2000, 2000)));
+    //sceneRectItem.setRect(sceneRect());
     //addItem(&sceneRectItem);
     //qDebug() << "Bounding Rect";
     //qDebug() << tempItemsBoundingRect;
@@ -36,8 +36,8 @@ LEDMatrixPicture::LEDMatrixPicture(uint numbOfParams) : DataBaseObject(static_ca
 }
 
 LEDMatrixPicture::LEDMatrixPicture(DataBaseObject* obj) : DataBaseObject(*obj, static_cast<DatabaseObjectType>(DB_GET_REAL_TYPE(LEDMatrixPictureDataBase, LED_MATRIX_PICTURE)), NUMB_OF_LED_MATRIX_PICTURE_PARAMETERS), QGraphicsScene(){
-    setSceneRect(QRectF(QPoint(-1000,-1000), QSize(2000, 2000)));
-    sceneRectItem.setRect(sceneRect());
+    //setSceneRect(QRectF(QPoint(-1000,-1000), QSize(2000, 2000)));
+    //sceneRectItem.setRect(sceneRect());
    // qDebug() << "Bounding Rect";
     //qDebug() << tempItemsBoundingRect;
     //addItem(&sceneRectItem);
@@ -55,6 +55,8 @@ LEDMatrixPicture::~LEDMatrixPicture(){
 
 
 // _PUBLIC_METHODS_ LEDMatrixPicture.cpp
+
+GET_DEFINITION(LEDMatrixPicture, QRectF, tempItemsBoundingRect)
 
 bool LEDMatrixPicture::get_changedFlag(){
     return changedFlag && !(changedFlag = false);
@@ -275,28 +277,7 @@ bool LEDMatrixPicture::eventFilter(QObject *obj, QEvent *ev){
         activateMode(static_cast<LEDMatrixPictureEventChangeMode*>(ev)->get_newModeType(), static_cast<LEDMatrixPictureEventChangeMode*>(ev)->get_phase());
     if(curMode){
         switch (curMode->type) {
-        case LED_MATRIX_PICTURE_MODE_SCENE_MOVE:
-        {
-            switch(ev->type()){
-            case QEvent::GraphicsSceneMouseMove:
-            {
-                QGraphicsSceneMouseEvent* event = static_cast<QGraphicsSceneMouseEvent*>(ev);
-                QPointF delta = event->lastScenePos() - event->scenePos();
-                QRectF rect = sceneRect();
-                rect.translate(delta);
-                setSceneRect(rect);
-            }
-                break;
-            case QEvent::GraphicsSceneMouseRelease:
-            {
-                deactivateCurMode();
-            }
-                break;
-            default:
-                break;
-            }
-        }
-            break;
+
         case LED_MATRIX_PICTURE_MODE_ADD_LED_MATRIX_PANEL:
         {   // SINGLE PHASE MODE
             switch(ev->type()){
@@ -348,12 +329,7 @@ bool LEDMatrixPicture::eventFilter(QObject *obj, QEvent *ev){
         switch(ev->type()){
         case QEvent::GraphicsSceneMousePress:
         {
-            if(obj == this){
-                if(items(static_cast<QGraphicsSceneMouseEvent*>(ev)->scenePos()).isEmpty()){
-                    activateMode(LED_MATRIX_PICTURE_MODE_SCENE_MOVE, 0);
-                    return true;
-                }
-            }
+
         }
             break;        
         }

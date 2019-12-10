@@ -20,8 +20,8 @@ public:
 protected:
     // Items Bounding Rect (Dynamic by Scene Change)
     QRectF tempItemsBoundingRect;
-    QGraphicsRectItem sceneRectItem;
 
+    QRectF lastViewRect;
 
     // Optionality Table
     static constexpr bool optionality[]=
@@ -45,11 +45,14 @@ protected:
     // For Scene Mode
     LEDMatrixPictureMode* curMode = nullptr;
 
+    QPointF lastMPos;
+
     // Changed Flag
     bool changedFlag = false;
 
 public:
     GET_DECLARATION(bool, changedFlag)
+    GET_DECLARATION(QRectF, tempItemsBoundingRect)
 
     DB_OBJECT_STANDARD_METHODS_NO_TYPES(LEDMatrixPicture, DataBaseObject, LEDMatrixPictureParameters, NUMB_OF_LED_MATRIX_PICTURE_PARAMETERS, NUMB_OF_DATABASE_OBJECT_PARAMETERS)
     virtual DataBaseFileOperationStat checkParamAndProccess(QString&, QString&, DataBaseObjectsReadFileContainer*)override;
@@ -65,6 +68,8 @@ public:
     bool removeElement(LEDMatrixPictureElement* remElem){ARRAY_REMOVE_PTR_WITH_TEMP_PTR_RETURN_BOOL(LEDMatrixPictureElement, elements, numbOfElements, remElem);}
     void clearElements(){ARRAY_CLEAR_PTR_WITH_TEMP_PTR(elements, numbOfElements);}
 
+    void setLastViewRect(QRectF rect){lastViewRect = rect;}
+    QRectF getLastViewRect(){return lastViewRect.isEmpty()? (lastViewRect = tempItemsBoundingRect) : lastViewRect;}
 
 };
 

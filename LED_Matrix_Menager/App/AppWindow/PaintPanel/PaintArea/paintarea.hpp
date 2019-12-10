@@ -8,6 +8,7 @@
 
 class PaintPanel;
 class QGraphicsScene;
+class LEDMatrixPicture;
 class PaintArea : public QGraphicsView{
 public:
     PaintArea(PaintPanel* parent, QGraphicsScene* refScene = nullptr);
@@ -27,6 +28,11 @@ protected:
     virtual void createLayout();
     virtual void connectEvents();
     virtual void clearMemory();
+
+    void autocomputeSceneSize();
+
+    inline void saveView();
+
 public:
     GET_DECLARATION(PaintPanel*, parent)
 
@@ -34,8 +40,15 @@ public:
     void paintEvent(QPaintEvent* ev) override;
     bool eventFilter(QObject* obj, QEvent* ev) override;
     void wheelEvent(QWheelEvent* ev)override;
+    void mouseMoveEvent(QMouseEvent* event)override;
 
+    void mousePressEvent(QMouseEvent* event)override;
+
+    void mouseReleaseEvent(QMouseEvent* event)override;
     void drawBackground(QPainter *painter, const QRectF &rect) override;
+
+    inline LEDMatrixPicture* scene();
+    void setScene(LEDMatrixPicture*);
 };
 
 #endif // PAINTAREA_HPP
